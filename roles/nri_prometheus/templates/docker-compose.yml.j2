@@ -1,0 +1,10 @@
+version: "1"
+services:
+  nri-prometheus:
+    image: "newrelic/nri-prometheus:{{ version }}"
+    volumes:
+      - "/opt/nri-prometheus/config.yml:/config.yml"
+    network_mode: "host"
+    env_file:
+      - nri-prometheus.env
+    restart: unless-stopped

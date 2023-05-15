@@ -1,0 +1,39 @@
+# NVIDIA distributes compiled DCGM as a docker container
+# This may be spun out into its own role at some point
+- name: check for docker
+  shell: docker run --rm hello-world
+  register: output
+  ignore_errors: true
+
+- name: Install docker
+  block:
+    - name: Make key directory
+      file:
+        path: /etc/apt/keyrings
+        state: directory
+        mode: '0755'
+
+    - name: add docker GPG key
+      shell: |
+        curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+        sudo chmod a+r /etc/apt/keyrings/docker.gpg
+        echo \
+        "deb [arch="$(dpkg --print-architecture)" signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
+        "$(. /etc/os-release && echo "$VERSION_CODENAME")" stable" | \
+        sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+
+    - name: update cache
+      package:
+        update_cache: yes
+
+    - name: install docker
+      package:
+        name: "{{ item }}"
+        state: present
+      loop:
+      - docker-ce
+      - docker-ce-cli
+      - containerd.io
+      - docker-buildx-plugin
+      - docker-compose-plugin
+  when: output.rc != 0

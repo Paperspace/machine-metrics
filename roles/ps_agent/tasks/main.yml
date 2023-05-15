@@ -1,0 +1,44 @@
+- name: Install gpg
+  become: yes
+  package:
+    name: gpg
+    state: present
+- name: Install apt-transport-https
+  become: yes
+  when: ansible_os_family == "Debian"
+  apt:
+    name: apt-transport-https
+    state: present
+    update_cache: true
+- name: Remove old paperspace signing key
+  become: yes
+  when: ansible_os_family == "Debian"
+  apt_key:
+    id: 871C89E03E1044F6792619E9BA9B2E815F0B9EDB
+    state: absent
+- name: Add paperspace apt repo key
+  become: yes
+  when: ansible_os_family == "Debian"
+  get_url:
+    url: https://metadata.paperspace.com/v2/apt/paperspace.key
+    dest: /usr/share/keyrings/paperspace.asc
+    mode: '0644'
+    force: true
+- name: Add paperspace repo
+  become: yes
+  when: ansible_os_family == "Debian"
+  apt_repository:
+    repo: deb [signed-by=/usr/share/keyrings/paperspace.asc] https://metadata.paperspace.com/v2/apt paperspace main
+    state: present
+    filename: paperspace
+- name: Install paperspace guest agent
+  become: yes
+  package:
+    name: ps-guest-agent
+    state: latest
+- name: Enable paperspace guest agent
+  become: yes
+  systemd:
+    name: ps-guest-agent
+    state: started
+    enabled: yes

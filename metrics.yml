@@ -1,0 +1,11 @@
+- hosts: all
+  become: true
+  tasks:
+    - name: Variable test
+      debug: msg={{ nri_prometheus_install }}  
+  roles:
+  - { role: docker, when: docker_install | bool }
+  - { role: node_exporter, when: node_exporter_install | bool }
+  - { role: dcgm_exporter, when: dcgm_exporter_install | bool }
+  - { role: ps_agent, when: ps_agent_install | bool }
+  - { role: nri_prometheus, when: nri_prometheus_install | bool }

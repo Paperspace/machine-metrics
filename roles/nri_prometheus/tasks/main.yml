@@ -1,0 +1,25 @@
+- name: Make nri-prometheus directory
+  file:
+    path: /opt/nri-prometheus
+    state: directory
+
+- name: Create nri-prometheus env file
+  template:
+    src: nri-prometheus.env.j2
+    dest: /opt/nri-prometheus/nri-prometheus.env
+    mode: '644'    
+
+- name: Create nri-prometheus config file
+  template:
+    src: config.yml.j2
+    dest: /opt/nri-prometheus/config.yml
+    mode: '644'
+
+- name: Create docker-compose file
+  template:
+    src: docker-compose.yml.j2
+    dest: /opt/nri-prometheus/docker-compose.yml
+    mode: '644'
+
+- name: enable nri-prometheus service
+  command: docker compose -f /opt/nri-prometheus/docker-compose.yml up -d

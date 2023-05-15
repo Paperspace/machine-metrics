@@ -1,0 +1,5 @@
+docker_install: yes
+node_exporter_install: yes
+dcgm_exporter_install: yes
+ps_agent_install: yes
+nri_prometheus_install: no

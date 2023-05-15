@@ -1,0 +1,80 @@
+
+# Checking if it is already installed so that we dont
+# download and install the binary everytime ansible runs
+# Idempotence, baby!
+
+# If the installation is not required
+- name: check if prom exporter binary exists
+  stat:
+    path: "/usr/local/bin/node_exporter-{{ node_exporter_version }}.linux-amd64"
+  register: prom_exporter
+
+# If exporter binary is not found download and and notify handlers
+- name: download node exporter binary
+  get_url:
+    url: "https://github.com/prometheus/node_exporter/releases/download/v{{ node_exporter_version }}/node_exporter-{{ node_exporter_version }}.linux-amd64.tar.gz"
+    dest: "/tmp/node_exporter.{{  ansible_date_time.epoch }}.tar.gz"
+    mode: 0644
+  when: prom_exporter.stat.exists == false
+  notify: "unarchive exporter"
+
+- name: Check for systemctl
+  shell: command -v systemctl >/dev/null 2>&1
+  register: output
+  ignore_errors: True
+
+- name: Calculate systemd availability
+  set_fact:
+    has_systemd: "{{ (output.rc == 0)|bool }}"
+
+- name: Set node exporter facts
+  set_fact:
+    node_exporter_bind_addr: "{{ node_exporter_bind_ip  | default('') }}:9100"
+    node_exporter_path: "/usr/local/bin/node_exporter-{{ node_exporter_version }}.linux-amd64/node_exporter"
+    state: "started"
+    enabled: True
+
+- name: create node_exporter unit file
+  template:
+    src: node-exporter.service
+    dest: /etc/systemd/system/node-exporter.service
+  when: has_systemd
+
+- name: "open port 9100 for node_exporter service"
+  iptables:
+    chain: INPUT
+    action: append
+    protocol: tcp
+    destination: "{{ node_exporter_dest_ip }}"
+    destination_port: 9100
+    jump: ACCEPT
+  vars:
+    node_exporter_dest_ip: "{{ node_exporter_bind_ip  | default(ansible_default_ipv4.address) }}"
+  when: open_port
+
+- name: create node_exporter dir
+  file:
+    state: directory
+    name: /var/node_exporter
+
+- name: create node_exporter text file dir
+  file:
+    state: directory
+    name: /var/node_exporter/textfiles
+
+- name: Before starting the service flush handlers to optionally unarchive node exporter
+  meta: flush_handlers
+
+- name: manage node-exporter service
+  service:
+    name: node-exporter
+    enabled: "{{ enabled }}"
+    state: "{{ state }}"
+  when: has_systemd
+
+- name: Start node_exporter agent on non-systemd OS
+  shell: >
+    nohup {{ node_exporter_path }}
+    --collector.textfile.directory /var/node_exporter/textfiles
+    --web.listen-address={{ node_exporter_bind_addr }} &
+  when: not has_systemd

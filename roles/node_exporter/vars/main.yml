@@ -1,0 +1,4 @@
+node_exporter_version: '1.4.0'
+open_port: true
+# can optional specify a bind ip
+# node_exporter_bind_ip:

@@ -1,0 +1,43 @@
+- name: add the package repositories
+  shell: |
+    curl -s -L https://nvidia.github.io/nvidia-docker/gpgkey | sudo apt-key add -
+    distribution=$(. /etc/os-release;echo $ID$VERSION_ID)
+    curl -s -L https://nvidia.github.io/nvidia-docker/$distribution/nvidia-docker.list | sudo tee /etc/apt/sources.list.d/nvidia-docker.list
+
+- name: install nvidia-container-toolkit
+  package:
+    name: nvidia-container-toolkit
+    update_cache: yes
+    state: present
+
+# N.B. This was necessary in testing on a fresh machine but could be
+# disastrous on a server
+- name: restart docker
+  service:
+    name: docker
+    state: restarted
+  when: restart_docker
+
+- name: Make dcgm-exporter directory
+  file:
+    path: /opt/dcgm-exporter
+    state: directory
+
+- name: copy docker-compose template
+  template:
+    src: docker-compose.yml.j2
+    dest: /opt/dcgm-exporter/docker-compose.yml
+    mode: '0644'
+
+- name: enable dcgm-exporter service
+  block:
+    - command: docker compose -f /opt/dcgm-exporter/docker-compose.yml up -d
+  rescue:
+    - name: Print troubleshooting message
+      fail:
+        msg: "This likely failed because docker needs restarting. Try re-running with restart_docker=true"
+      when: restart_docker == false
+    - name: Misc error
+      fail:
+        msg: "Something went wrong"
+      when: restart_docker == true  

@@ -1,0 +1,12 @@
+- name: unarchive exporter
+  unarchive:
+    src: "/tmp/node_exporter.{{  ansible_date_time['epoch'] }}.tar.gz"
+    dest: /usr/local/bin/
+    mode: 755
+    remote_src: yes
+  notify: "Cleanup the temporary files"
+
+- name: Cleanup the temporary files
+  file:
+    path: "/tmp/node_exporter.{{  ansible_date_time['epoch'] }}.tar.gz"
+    state: absent
