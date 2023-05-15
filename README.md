@@ -10,7 +10,7 @@ This repo contains an Ansible playbook and associated roles for deploying Promet
 ### Basic
 1. Clone this repository.
 2. Create an inventory file `inventory` with the IPs of the target machines.
-3. Run the playbook: `ansible-playbook -i inventory playbook.yml`
+3. Run the playbook: `ansible-playbook -i inventory metrics.yml`
 
 ### Ansible Primer
 Depending on how you have your Ansible environment configured, you may need to specify the SSH user and/or SSH key to use when connecting to the target machines. This can be done by adding the following to the `ansible-playbook` command:
