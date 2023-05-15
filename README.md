@@ -31,12 +31,13 @@ Depending on how you have your Ansible environment configured, you may need to s
 *  `--private-key <path>` to specify the SSH key
 
 ### Extra Variables
-| Name                     | Description                                                                                                                                                                       | Default |
-|--------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------|
-| `docker_install`         | Whether to install Docker on the target machine. If set to False, the playbook will assume that Docker is already installed and will skip the installation step.                  | True    |
-| `node_exporter_install`  | Whether to install Prometheus Node Exporter on the target machine.                                                                                                                | True    |
-| `dcgm_exporter_install`  | Whether to install DCGM Exporter on the target machine.                                                                                                                           | True    |
-| `ps_agent_install`       | Whether to install the Paperspace Agent on the target machine.                                                                                                                    | True    |
-| `nri_prometheus_install` | Whether to install the New Relic Openmetrics Integration on the target machine.                                                                                                   | False   |
-| `restart_docker`         | Whether to restart the Docker service on the target machine after installing the DCGM Exporter. This may be necessary for the DCGM Exporter to be able to access the GPU metrics. | False   |
-| `license_key`            | New Relic license key for use by the the New Relic Openmetrics Integration.                                                                                                       | NULL    |
+| Name                     | Description                                                                                                                                                                       | Default    |
+|--------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|------------|
+| `docker_install`         | Whether to install Docker on the target machine. If set to False, the playbook will assume that Docker is already installed and will skip the installation step.                  | True       |
+| `node_exporter_install`  | Whether to install Prometheus Node Exporter on the target machine.                                                                                                                | True       |
+| `dcgm_exporter_install`  | Whether to install DCGM Exporter on the target machine.                                                                                                                           | True       |
+| `ps_agent_install`       | Whether to install the Paperspace Agent on the target machine.                                                                                                                    | True       |
+| `nri_prometheus_install` | Whether to install the New Relic Openmetrics Integration on the target machine.                                                                                                   | False      |
+| `restart_docker`         | Whether to restart the Docker service on the target machine after installing the DCGM Exporter. This may be necessary for the DCGM Exporter to be able to access the GPU metrics. | False      |
+| `license_key`            | New Relic license key for use by the the New Relic Openmetrics Integration.                                                                                                       | NULL       |
+| `cluster_name`           | Cluster name for New Relic Openmetrics Integration.                                                                                                                               | Paperspace |                                                                                                   | NULL    |
