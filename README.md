@@ -14,6 +14,14 @@ This repo contains an Ansible playbook and associated roles for deploying Promet
 2. Create an inventory file `inventory` with the IPs of the target machines.
 3. Run the playbook: `ansible-playbook -i inventory metrics.yml`
 
+#### Example Usage
+The following command will install Docker, Prometheus Node Exporter, DCGM Exporter, and the Paperspace Agent on the target machines specified in the `inventory` file. It will configure New Relic Openmetrics Integration to scrape their metrics endpoints. Take care as it will also **restart Docker** service on the target machines after installing the DCGM Exporter.
+```
+```
+ansible-playbook -i inventory metrics.yml -u paperspace -e license_key=1234567890abcdefg --private-key ~/.ssh/id_rsa -e nri_prometheus_install=True -e restart_docker=True
+```
+```
+
 ### Ansible Primer
 Depending on how you have your Ansible environment configured, you may need to specify the SSH user and/or SSH key to use when connecting to the target machines. This can be done by adding the following to the `ansible-playbook` command:
 * `-u <username>` to specify the SSH user
@@ -32,3 +40,4 @@ Depending on how you have your Ansible environment configured, you may need to s
 | `ps_agent_install`       | Whether to install the Paperspace Agent on the target machine.                                                                                                                    | True    |
 | `nri_prometheus_install` | Whether to install the New Relic Openmetrics Integration on the target machine.                                                                                                   | False   |
 | `restart_docker`         | Whether to restart the Docker service on the target machine after installing the DCGM Exporter. This may be necessary for the DCGM Exporter to be able to access the GPU metrics. | False   |
+| `license_key`            | New Relic license key for use by the the New Relic Openmetrics Integration.                                                                                                       | NULL    |
