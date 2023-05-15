@@ -16,10 +16,9 @@ This repo contains an Ansible playbook and associated roles for deploying Promet
 
 #### Example Usage
 The following command will install Docker, Prometheus Node Exporter, DCGM Exporter, and the Paperspace Agent on the target machines specified in the `inventory` file. It will configure New Relic Openmetrics Integration to scrape their metrics endpoints. Take care as it will also **restart Docker** service on the target machines after installing the DCGM Exporter.
-```
+
 ```
 ansible-playbook -i inventory metrics.yml -u paperspace -e license_key=1234567890abcdefg --private-key ~/.ssh/id_rsa -e nri_prometheus_install=True -e restart_docker=True
-```
 ```
 
 ### Ansible Primer
