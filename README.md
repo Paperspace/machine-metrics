@@ -22,7 +22,6 @@ Depending on how you have your Ansible environment configured, you may need to s
 *  `--private-key <path>` to specify the SSH key
 
 ### Extra Variables
-The playbook can be configured using the following extra variables:
 | Name                     | Description                                                                                                                                                                       | Default |
 |--------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------|
 | `docker_install`         | Whether to install Docker on the target machine. If set to False, the playbook will assume that Docker is already installed and will skip the installation step.                  | True    |
