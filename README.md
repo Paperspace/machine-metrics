@@ -2,8 +2,10 @@
 This repo contains an Ansible playbook and associated roles for deploying Prometheus Node Exporter, DCGM Exporter, PS Agent, and (optionally) New Relic Openmetrics Integration on a Paperspace machine.
 
 ## Requirements
-* Python 2.7 or 3.5+
 * Ansible
+### Target Machine
+* Python 2.7 or 3.5+
+* Ubuntu 20.04+
 
 ## Operation
 
