@@ -18,7 +18,7 @@ This repo contains an Ansible playbook and associated roles for deploying Promet
 The following command will install Docker, Prometheus Node Exporter, DCGM Exporter, and the Paperspace Agent on the target machines specified in the `inventory` file. It will configure New Relic Openmetrics Integration to scrape their metrics endpoints. Take care as it will also **restart Docker** service on the target machines after installing the DCGM Exporter.
 
 ```
-ansible-playbook -i inventory metrics.yml -u paperspace -e license_key=1234567890abcdefg --private-key ~/.ssh/id_rsa -e nri_prometheus_install=True -e restart_docker=True
+ansible-playbook -i inventory metrics.yml -u paperspace -e new_relic_license_key=1234567890abcdefg --private-key ~/.ssh/id_rsa -e install_new_relic_integration=True -e restart_docker=True
 ```
 
 ### Ansible Primer
@@ -31,13 +31,13 @@ Depending on how you have your Ansible environment configured, you may need to s
 *  `--private-key <path>` to specify the SSH key
 
 ### Extra Variables
-| Name                     | Description                                                                                                                                                                       | Default    |
-|--------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|------------|
-| `docker_install`         | Whether to install Docker on the target machine. If set to False, the playbook will assume that Docker is already installed and will skip the installation step.                  | True       |
-| `node_exporter_install`  | Whether to install Prometheus Node Exporter on the target machine.                                                                                                                | True       |
-| `dcgm_exporter_install`  | Whether to install DCGM Exporter on the target machine.                                                                                                                           | True       |
-| `ps_agent_install`       | Whether to install the Paperspace Agent on the target machine.                                                                                                                    | True       |
-| `nri_prometheus_install` | Whether to install the New Relic Openmetrics Integration on the target machine.                                                                                                   | False      |
-| `restart_docker`         | Whether to restart the Docker service on the target machine after installing the DCGM Exporter. This may be necessary for the DCGM Exporter to be able to access the GPU metrics. | False      |
-| `license_key`            | New Relic license key for use by the the New Relic Openmetrics Integration.                                                                                                       | NULL       |
-| `cluster_name`           | Cluster name for New Relic Openmetrics Integration.                                                                                                                               | Paperspace |                                                                                                   | NULL    |
+| Name                            | Description                                                                                                                                                                       | Default    |
+|---------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|------------|
+| `docker_install`                | Whether to install Docker on the target machine. If set to False, the playbook will assume that Docker is already installed and will skip the installation step.                  | True       |
+| `node_exporter_install`         | Whether to install Prometheus Node Exporter on the target machine.                                                                                                                | True       |
+| `ps_agent_install`              | Whether to install the Paperspace Agent on the target machine.                                                                                                                    | True       |
+| `dcgm_exporter_install`         | Whether to install DCGM Exporter on the target machine.                                                                                                                           | True       |
+| `restart_docker`                | Whether to restart the Docker service on the target machine after installing the DCGM Exporter. This may be necessary for the DCGM Exporter to be able to access the GPU metrics. | False      |
+| `install_new_relic_integration` | Whether to install the New Relic Openmetrics Integration on the target machine.                                                                                                   | False      |
+| `new_relic_license_key`         | New Relic license key for use by the the New Relic Openmetrics Integration.                                                                                                       | NULL       |
+| `new_relic_cluster_name`        | Cluster name for New Relic Openmetrics Integration.                                                                                                                               | Paperspace |
