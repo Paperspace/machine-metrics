@@ -1,2 +1,2 @@
 version: 1.5
-cluster_name: Paperspace
+new_relic_cluster_name: Paperspace
